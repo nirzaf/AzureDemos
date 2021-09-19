@@ -7,14 +7,13 @@ namespace SendingToEventHub
 {
     class Program
     {
-        static int _messageNumber = 0;
+        private static int _messageNumber = 0;
 
         static async Task Main(string[] args)
         {
             Console.WriteLine("Starting our Event Hub Producer");
             string namespaceConnectionString = "Endpoint=sb://eventhubyoutubedemos2.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=KoaJlFSB5wTdAnwoHKrQA+fl2eoWHpjyBK9vkuo8aFw=";
             string eventHubName = "demoeventhub";
-
             await SendAFewMessages(namespaceConnectionString, eventHubName);
             Console.WriteLine("Messages Sent");
             Console.ReadLine();
