@@ -1,17 +1,11 @@
 using Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SyncOverAsyncTest
 {
@@ -27,17 +21,14 @@ namespace SyncOverAsyncTest
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddSingleton((Func<IServiceProvider, ICommunicationService>)(sp =>
-			{
-				return new CommunicationService((MessagingConfig)new MessagingConfig
-				{
-					ConnectionString = "Endpoint=sb://ciaransyoutubedemos.servicebus.windows.net/;SharedAccessKeyName=SendDemo;SharedAccessKey=YTx4cOCZrec/H+kalXfwuW6H4jkBpjPMfUAk9LrIC0c=",
-					ReplyTopic = "replyTopic",
-					ReplySubscription = "replySubscription",
-					RequestTopic = "requestTopic",
-					RequestSubscription = "requestSubscription"
-				});
-			}));
+			services.AddSingleton((Func<IServiceProvider, ICommunicationService>)(sp => new CommunicationService(new MessagingConfig
+            {
+                ConnectionString = "Endpoint=sb://ciaransyoutubedemos.servicebus.windows.net/;SharedAccessKeyName=SendDemo;SharedAccessKey=YTx4cOCZrec/H+kalXfwuW6H4jkBpjPMfUAk9LrIC0c=",
+                ReplyTopic = "replyTopic",
+                ReplySubscription = "replySubscription",
+                RequestTopic = "requestTopic",
+                RequestSubscription = "requestSubscription"
+            })));
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
 			{
@@ -56,12 +47,9 @@ namespace SyncOverAsyncTest
 			}
 
 			app.UseHttpsRedirection();
-
-			app.UseRouting();
-
-			app.UseAuthorization();
-
-			app.UseEndpoints(endpoints =>
+            app.UseRouting();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllers();
 			});
