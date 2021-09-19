@@ -1,66 +1,46 @@
 ﻿using Microsoft.Azure.ServiceBus;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CompetingConsumersQueues
 {
-	class QueueReceiver
+    class QueueReceiver
 	{
-		readonly string queueName;
-		readonly string connectionString;
-		string id;
-
-		//use this to simulate random errors
-		Random random;
-
+		readonly string _queueName;
+		readonly string _connectionString;
+        readonly string _id;
 
 		public QueueReceiver(string connectionString, string queueName, string id)
 		{
-			this.connectionString = connectionString;
-			this.id = id;
-			this.queueName = queueName;
-			this.random = new Random();
-
+			_connectionString = connectionString;
+			_id = id;
+			_queueName = queueName;
 		}
-
-
-
 
 		public void Go()
 		{
-			QueueClient receivingClient = new QueueClient(connectionString, queueName, ReceiveMode.PeekLock, RetryPolicy.Default);
+			QueueClient receivingClient = new(_connectionString, _queueName, ReceiveMode.PeekLock, RetryPolicy.Default);
 			receivingClient.PrefetchCount = 10;
-			MessageHandlerOptions options = new MessageHandlerOptions(HandleError)
+			MessageHandlerOptions options = new(HandleError)
 			{
 				MaxConcurrentCalls = 1
 			};
-
 			receivingClient.RegisterMessageHandler(HandleMessage, options);
-
-
 		}
 
 		public Task HandleMessage(Message message, CancellationToken cancelToken)
 		{
 			var bodyBytes = message.Body;
-
 			var ourMessage = System.Text.Encoding.UTF8.GetString(bodyBytes);
-
-			Console.WriteLine($"Message Received on {id}: {ourMessage}");
+			Console.WriteLine($"Message Received on {_id}: {ourMessage}");
 			return Task.CompletedTask;
-
 		}
 
 		public Task HandleError(ExceptionReceivedEventArgs args)
 		{
-			Console.WriteLine($"Exception Occurred on {id}! : {args.Exception}");
-
+			Console.WriteLine($"Exception Occurred on {_id}! : {args.Exception}");
 			return Task.CompletedTask;
-
 		}
-
-
 	}
 }

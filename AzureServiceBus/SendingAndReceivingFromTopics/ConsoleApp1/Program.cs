@@ -41,19 +41,14 @@ namespace ConsoleApp1
 			subscriptionClient.RegisterMessageHandler((message, cancelToken) =>
 				{
 					var bodyBytes = message.Body;
-
-					var ourMessage = System.Text.Encoding.UTF8.GetString(bodyBytes);
-
-					Console.WriteLine("Message Received:" + ourMessage);
-
-					return Task.CompletedTask;
+                    var ourMessage = System.Text.Encoding.UTF8.GetString(bodyBytes);
+                    Console.WriteLine("Message Received:" + ourMessage);
+                    return Task.CompletedTask;
 				},
 				(exceptionArg) =>
 				{
-
-					Console.WriteLine("Exception Occurred! : " + exceptionArg.Exception.ToString());
-
-					return Task.CompletedTask;
+                    Console.WriteLine("Exception Occurred! : " + exceptionArg.Exception.ToString());
+                    return Task.CompletedTask;
 				});
 
 
