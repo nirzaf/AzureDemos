@@ -10,26 +10,21 @@ namespace BackgroundNumberGenerator
 	{
 		static async Task Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
-
-			MessagingService s = new MessagingService(new MessagingConfig
+			var s = new MessagingService(new MessagingConfig
 			{
 				ConnectionString = "Endpoint=sb://ciaransyoutubedemos.servicebus.windows.net/;SharedAccessKeyName=SendDemo;SharedAccessKey=YTx4cOCZrec/H+kalXfwuW6H4jkBpjPMfUAk9LrIC0c=",
 				ReplyTopic = "replyTopic",
 				RequestTopic = "requestTopic",
 				RequestSubscription = "requestSubscription"
 			});
+            Console.CancelKeyPress += Console_CancelKeyPress;
+            await Task.Delay(Convert.ToInt32(TimeSpan.FromHours(1).TotalMilliseconds), Cancel.Token);
+        }
 
-			Console.CancelKeyPress += Console_CancelKeyPress;
-
-			await Task.Delay(Convert.ToInt32(TimeSpan.FromHours(1).TotalMilliseconds), cancel.Token);
-
-
-		}
-		static CancellationTokenSource cancel = new CancellationTokenSource();
+		static readonly CancellationTokenSource Cancel = new();
 		private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
 		{
-			cancel.Cancel();
+			Cancel.Cancel();
 		}
 	}
 }
